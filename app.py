@@ -89,7 +89,7 @@ def questionnaire():
 @app.route('/admin/answers')
 def admin_answers():
     # პრიმიტიული დაცვა: (მაგალითად მხოლოდ შენი იმეილით)
-    if 'user' not in session or session['user'] != 'achiko.buadze006@ens.tsu.edu.ge':
+    if 'user' not in session or session['user'] != 'achimgebr12@gmail.com':
         return "Access denied!", 403
     answers = load_json(ANSWERS_FILE)
     return render_template('admin_answers.html', answers=answers)
