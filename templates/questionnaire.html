@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>კითხვარი</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .question-section { margin-bottom: 2rem; }
+        .question-card { margin-bottom: 1rem; border-left: 5px solid #007bff; }
+        .question-label { font-weight: 500; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-10">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center">კითხვარი</h2>
+                    <div class="mb-3 text-end">
+                        <span class="text-secondary small">მომხმარებელი: {{ user }}</span>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <div class="alert alert-success">
+                        {% for message in messages %}
+                          {{ message }}<br>
+                        {% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                    <form method="post">
+                        <!-- 1-10: კი/არა -->
+                        <div class="question-section">
+                            <h5 class="mb-3 text-primary">დახურული კითხვები (კი/არა)</h5>
+                            {% set closed = user_answer.get('closed', {}) %}
+                            {% for i in range(1, 11) %}
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">
+                                    {{ i }}. 
+                                    {% if i == 1 %} მოგწონს კითხვა?
+                                    {% elif i == 2 %} გაქვს თავისუფალი დრო ყოველდღე?
+                                    {% elif i == 3 %} სარგებლობ საზოგადოებრივი ტრანსპორტით?
+                                    {% elif i == 4 %} მუშაობ კომპიუტერთან?
+                                    {% elif i == 5 %} აქტიურად დაკავებული ხარ სპორტით?
+                                    {% elif i == 6 %} კითხულობ წიგნებს?
+                                    {% elif i == 7 %} მოგწონს მოგზაურობა?
+                                    {% elif i == 8 %} გაქვს შინაური ცხოველი?
+                                    {% elif i == 9 %} გირჩევნია დილა საღამოს?
+                                    {% elif i == 10 %} ინტერესდები ტექნოლოგიებით?
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <input type="radio" class="form-check-input" name="q{{i}}" value="კი" {% if closed['q' ~ i]=='კი' %}checked{% endif %} required> კი
+                                    <input type="radio" class="form-check-input ms-2" name="q{{i}}" value="არა" {% if closed['q' ~ i]=='არა' %}checked{% endif %}> არა
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        <!-- 11-15: მხოლოდ ერთი პასუხი -->
+                        <div class="question-section">
+                            <h5 class="mb-3 text-primary">არჩევითი კითხვები (ერთ პასუხიანი)</h5>
+                            {% set single = user_answer.get('single', {}) %}
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">11. შენი საყვარელი საჭმელი:</div>
+                                <div>
+                                    {% set q = 'q11' %}
+                                    <input type="radio" class="form-check-input" name="{{q}}" value="ხორცი" {% if single[q]=='ხორცი' %}checked{% endif %} required> ხორცი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ბოსტნეული" {% if single[q]=='ბოსტნეული' %}checked{% endif %}> ბოსტნეული
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ხილი" {% if single[q]=='ხილი' %}checked{% endif %}> ხილი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ზღვის პროდუქტები" {% if single[q]=='ზღვის პროდუქტები' %}checked{% endif %}> ზღვის პროდუქტები
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">12. რომელ სპორტს თამაშობ?</div>
+                                <div>
+                                    {% set q = 'q12' %}
+                                    <input type="radio" class="form-check-input" name="{{q}}" value="ფეხბურთი" {% if single[q]=='ფეხბურთი' %}checked{% endif %} required> ფეხბურთი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="კალათბურთი" {% if single[q]=='კალათბურთი' %}checked{% endif %}> კალათბურთი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ჩოგბურთი" {% if single[q]=='ჩოგბურთი' %}checked{% endif %}> ჩოგბურთი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="არცერთი" {% if single[q]=='არცერთი' %}checked{% endif %}> არცერთი
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">13. რომელი მუსიკალური ჟანრი მოგწონს?</div>
+                                <div>
+                                    {% set q = 'q13' %}
+                                    <input type="radio" class="form-check-input" name="{{q}}" value="როკი" {% if single[q]=='როკი' %}checked{% endif %} required> როკი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="პოპი" {% if single[q]=='პოპი' %}checked{% endif %}> პოპი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="კლასიკური" {% if single[q]=='კლასიკური' %}checked{% endif %}> კლასიკური
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ჯაზი" {% if single[q]=='ჯაზი' %}checked{% endif %}> ჯაზი
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">14. შენი საყვარელი სეზონი:</div>
+                                <div>
+                                    {% set q = 'q14' %}
+                                    <input type="radio" class="form-check-input" name="{{q}}" value="ზაფხული" {% if single[q]=='ზაფხული' %}checked{% endif %} required> ზაფხული
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="ზამთარი" {% if single[q]=='ზამთარი' %}checked{% endif %}> ზამთარი
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="გაზაფხული" {% if single[q]=='გაზაფხული' %}checked{% endif %}> გაზაფხული
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="შემოდგომა" {% if single[q]=='შემოდგომა' %}checked{% endif %}> შემოდგომა
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">15. რომელ სოციალურ ქსელს იყენებ ხშირად?</div>
+                                <div>
+                                    {% set q = 'q15' %}
+                                    <input type="radio" class="form-check-input" name="{{q}}" value="Facebook" {% if single[q]=='Facebook' %}checked{% endif %} required> Facebook
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="Instagram" {% if single[q]=='Instagram' %}checked{% endif %}> Instagram
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="TikTok" {% if single[q]=='TikTok' %}checked{% endif %}> TikTok
+                                    <input type="radio" class="form-check-input ms-2" name="{{q}}" value="არცერთი" {% if single[q]=='არცერთი' %}checked{% endif %}> არცერთი
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- 16-20: რამდენიმე პასუხი (checkbox) -->
+                        <div class="question-section">
+                            <h5 class="mb-3 text-primary">არჩევითი კითხვები (მრავალპასუხიანი)</h5>
+                            {% set multi = user_answer.get('multi', {}) %}
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">16. რომელი სპორტი გიყვარს?</div>
+                                <div>
+                                    {% set q = 'q16' %}
+                                    <input type="checkbox" class="form-check-input" name="{{q}}" value="ფეხბურთი" {% if multi[q] and 'ფეხბურთი' in multi[q] %}checked{% endif %}> ფეხბურთი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="კალათბურთი" {% if multi[q] and 'კალათბურთი' in multi[q] %}checked{% endif %}> კალათბურთი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ცურვა" {% if multi[q] and 'ცურვა' in multi[q] %}checked{% endif %}> ცურვა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ჩოგბურთი" {% if multi[q] and 'ჩოგბურთი' in multi[q] %}checked{% endif %}> ჩოგბურთი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="არცერთი" {% if multi[q] and 'არცერთი' in multi[q] %}checked{% endif %}> არცერთი
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">17. რომელი მოწყობილობა გაქვს?</div>
+                                <div>
+                                    {% set q = 'q17' %}
+                                    <input type="checkbox" class="form-check-input" name="{{q}}" value="ლეპტოპი" {% if multi[q] and 'ლეპტოპი' in multi[q] %}checked{% endif %}> ლეპტოპი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ტელეფონი" {% if multi[q] and 'ტელეფონი' in multi[q] %}checked{% endif %}> ტელეფონი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ტაბლეტი" {% if multi[q] and 'ტაბლეტი' in multi[q] %}checked{% endif %}> ტაბლეტი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="სხვა" {% if multi[q] and 'სხვა' in multi[q] %}checked{% endif %}> სხვა
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">18. რომელი სასმელი გიყვარს?</div>
+                                <div>
+                                    {% set q = 'q18' %}
+                                    <input type="checkbox" class="form-check-input" name="{{q}}" value="წყალი" {% if multi[q] and 'წყალი' in multi[q] %}checked{% endif %}> წყალი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ყავა" {% if multi[q] and 'ყავა' in multi[q] %}checked{% endif %}> ყავა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ჩაი" {% if multi[q] and 'ჩაი' in multi[q] %}checked{% endif %}> ჩაი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="წვენი" {% if multi[q] and 'წვენი' in multi[q] %}checked{% endif %}> წვენი
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">19. სად გირჩევნია დასვენება?</div>
+                                <div>
+                                    {% set q = 'q19' %}
+                                    <input type="checkbox" class="form-check-input" name="{{q}}" value="ზღვა" {% if multi[q] and 'ზღვა' in multi[q] %}checked{% endif %}> ზღვა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="მთა" {% if multi[q] and 'მთა' in multi[q] %}checked{% endif %}> მთა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ქალაქი" {% if multi[q] and 'ქალაქი' in multi[q] %}checked{% endif %}> ქალაქი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="სოფელი" {% if multi[q] and 'სოფელი' in multi[q] %}checked{% endif %}> სოფელი
+                                </div>
+                            </div>
+                            <div class="card question-card p-3">
+                                <div class="question-label mb-1">20. შენი ჰობები:</div>
+                                <div>
+                                    {% set q = 'q20' %}
+                                    <input type="checkbox" class="form-check-input" name="{{q}}" value="მუსიკა" {% if multi[q] and 'მუსიკა' in multi[q] %}checked{% endif %}> მუსიკა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="სპორტი" {% if multi[q] and 'სპორტი' in multi[q] %}checked{% endif %}> სპორტი
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ხელოვნება" {% if multi[q] and 'ხელოვნება' in multi[q] %}checked{% endif %}> ხელოვნება
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="კითხვა" {% if multi[q] and 'კითხვა' in multi[q] %}checked{% endif %}> კითხვა
+                                    <input type="checkbox" class="form-check-input ms-2" name="{{q}}" value="ტექნოლოგიები" {% if multi[q] and 'ტექნოლოგიები' in multi[q] %}checked{% endif %}> ტექნოლოგიები
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4">გაგზავნა</button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">გამოსვლა</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
