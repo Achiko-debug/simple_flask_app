@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>ყველა პასუხი</title>
+</head>
+<body>
+    <h2>ყველა პასუხი</h2>
+    <ul>
+    {% for user, resp in answers.items() %}
+        <li><b>{{ user }}</b>: {{ resp }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
